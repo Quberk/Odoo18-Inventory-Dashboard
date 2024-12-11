@@ -13,17 +13,17 @@
                                         Inventory Dashboard
                                     </h1>
                                     <div>
-                                        <select class="form-select" t-model="state.selectedProduct">
-                                            <option value="0">Select a Product</option>
-                                            <t t-foreach="state.products" t-as="product" t-key="product.value">
-                                                <option t-att-value="product.value">
-                                                    <t t-esc="product.label"/>
+                                        <select class="form-select" t-model="state.selectedProductCategory" t-on-change="onChangeCategory">
+                                            <option value="0">Select a Product's Category</option>
+                                            <t t-foreach="state.product_categories" t-as="category" t-key="category.value">
+                                                <option t-att-value="category.value">
+                                                    <t t-esc="category.label"/>
                                                 </option>
                                             </t>
                                         </select>
                                     </div>
                                     <div>
-                                        <select class="form-select">
+                                        <select class="form-select" t-model="state.period" t-on-change="onChangePeriod">
                                             <option value="0">Select a Period</option>
                                             <option value="7">Last 7 Days</option>
                                             <option value="30">Last 1 Month</option>
@@ -37,8 +37,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <StockCard name="'Incoming'" value="'201'" percentage="'23'"/>
-                        <StockCard name="'Outgoing'" value="'321'" percentage="'17'"/>
+                        <StockCard name="'Incoming'" value="state.incoming_picking.value" percentage="state.incoming_picking.percentage"/>
+                        <StockCard name="'Outgoing'" value="state.outgoing_picking.value" percentage="state.outgoing_picking.percentage"/>
 
                     </div>
                 </div>
@@ -49,11 +49,9 @@
                                 <h1 class="text-primary fw-bold">
                                     Monthly Stocks
                                 </h1>
-                                <div class="px-3 py-1 bg-primary cursor-pointer">
-                                    <span class="fa fa-arrow-right text-white"/>
-                                </div>
+
                             </div>
-                            <ChartRenderer type="'bar'" title="'Monthly Stock Report'"/>
+                            <ChartRenderer type="'line'" title="'Monthly Stock Report'" labels="state.label_strings"/>
 
                         </div>
                     </div>

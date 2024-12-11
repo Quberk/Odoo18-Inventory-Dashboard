@@ -2,5 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="owl.ChartRenderer" owl="1">
         <canvas t-ref="chart"/>
+        <div class="px-3 py-1 bg-primary cursor-pointer">
+            <span class="fa fa-arrow-right text-white" t-on-click="() => this.renderChart()"/>
+        </div>
     </t>
 </templates>

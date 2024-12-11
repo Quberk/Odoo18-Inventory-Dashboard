@@ -11,20 +11,20 @@ export class ChartRenderer extends Component {
             await loadJS("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js")
         })
 
-        onMounted(()=>this.renderChart())
+        onMounted(()=>this.renderChart());
+
     }
 
     renderChart(){
-        new Chart(this.chartRef.el,
+      if (this.chart){
+        this.chart.destroy()
+      }
+      this.chart = new Chart(this.chartRef.el,
         {
           type: this.props.type,
           data: {
-            labels: [
-                'Red',
-                'Blue',
-                'Yellow'
-              ],
-              datasets: [
+            labels: this.props.labels,
+            datasets: [
               {
                 label: 'My First Dataset',
                 data: [300, 50, 100],
@@ -51,6 +51,7 @@ export class ChartRenderer extends Component {
         }
       );
     }
+
 }
 
 ChartRenderer.template = "owl.ChartRenderer"
