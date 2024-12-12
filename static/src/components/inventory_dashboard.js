@@ -20,7 +20,9 @@ export class OwlInventoryDashboard extends Component {
             product_categories: [],
             period:0,
             currentCategory:0,
-            label_strings:["A", "B", "C", "D"],
+            labels:[],
+            label_strings:[],
+            data_stock:[],
         })
         this.orm = useService("orm")
         this.actionService = useService("action")
@@ -34,6 +36,7 @@ export class OwlInventoryDashboard extends Component {
         this.getDates()
         await this.getIncoming()
         await this.getOutgoing()
+        await this.getStockQuantity()
     }
 
     async onChangePeriod(){
@@ -44,6 +47,38 @@ export class OwlInventoryDashboard extends Component {
         this.getDates()
         await this.getIncoming()
         await this.getOutgoing()
+        await this.getStockQuantity()
+    }
+
+    async getStockQuantity(){
+        const products = await this.getProductFromCategory(parseInt(this.state.currentCategory))
+        console.log("Products: " + products)
+        const dateTimes = this.state.labels
+        const productStockDatas = []
+        for (let i = 0; i < products.length; i++) {
+            let productStockData = {
+                label: products[i].name,
+                data: [],
+                hoverOffset: 4
+            }
+            for (let j = 0; j < dateTimes.length; j++){
+                let productStockQty = await this.getStockQuantityAtTime(products[i].id, dateTimes[j])
+                productStockData.data.push(productStockQty)
+            }
+            productStockDatas.push(productStockData)
+        }
+        this.state.data_stock = productStockDatas
+        console.log("Data Stock: " + this.state.data_stock)
+    }
+
+    async getStockQuantityAtTime(productId, dateTime){
+        try {
+            const stockQuantity = await this.orm.call("product.product", "get_stock_at_time", [productId, dateTime]);
+            console.log("Stock Quantity:", stockQuantity);
+            return stockQuantity;
+        } catch (error) {
+            console.error("Error fetching stock quantity:", error);
+        }
     }
 
     getDates() {
@@ -67,7 +102,6 @@ export class OwlInventoryDashboard extends Component {
 
     formatDate(date){
         return date.toISOString().split('T')[0];
-
     }
 
     getChartDates(){
@@ -232,6 +266,14 @@ export class OwlInventoryDashboard extends Component {
 
     }
 
+    async getProductFromCategory(category){
+        const products = await this.orm.searchRead("product.product", [['categ_id','child_of',category]])
+        if (products.length <= 0 || products == null){
+            return []
+        }
+        return products
+    }
+
     async getStockMoves(domain){
         let stock_moves = []
         const pickings = await this.orm.searchRead("stock.picking", domain)
@@ -240,8 +282,8 @@ export class OwlInventoryDashboard extends Component {
         let product_ids = []
         
         if (this.state.currentCategory != 0){
-            const category = parseInt(this.state.currentCategory)
-            const products = await this.orm.searchRead("product.product", [['categ_id','child_of',category]])
+            let products = []
+            products = await this.getProductFromCategory(parseInt(this.state.currentCategory))
             product_ids = products.map((product) => (product.id))
         }
 

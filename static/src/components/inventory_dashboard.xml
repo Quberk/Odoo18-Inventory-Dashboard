@@ -4,15 +4,16 @@
     <t t-name="owl.OwlInventoryDashboard" owl="1">
         <div class="vh-100 overflow-auto bg-muted">
             <div class="row m-3">
-                <div class="col-lg-7">
+                <div class="col-lg-5">
                     <div class="row">
                         <div class="col m-0 p-0">
                             <div class="shadow-sm border m-2 p-4 bg-white">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <h1 class="text-primary fw-bold">
-                                        Inventory Dashboard
+                                        Stock
                                     </h1>
                                     <div>
+                                        <span class="fw-bold">Product Category</span>
                                         <select class="form-select" t-model="state.selectedProductCategory" t-on-change="onChangeCategory">
                                             <option value="0">Select a Product's Category</option>
                                             <t t-foreach="state.product_categories" t-as="category" t-key="category.value">
@@ -23,6 +24,7 @@
                                         </select>
                                     </div>
                                     <div>
+                                        <span class="fw-bold">Period</span>
                                         <select class="form-select" t-model="state.period" t-on-change="onChangePeriod">
                                             <option value="0">Select a Period</option>
                                             <option value="7">Last 7 Days</option>
@@ -37,12 +39,12 @@
                         </div>
                     </div>
                     <div class="row">
-                        <StockCard name="'Incoming'" value="state.incoming_picking.value" percentage="state.incoming_picking.percentage"/>
-                        <StockCard name="'Outgoing'" value="state.outgoing_picking.value" percentage="state.outgoing_picking.percentage"/>
+                        <StockCard name="'Total Product Incoming'" value="state.incoming_picking.value" percentage="state.incoming_picking.percentage"/>
+                        <StockCard name="'Total Product Outgoing'" value="state.outgoing_picking.value" percentage="state.outgoing_picking.percentage"/>
 
                     </div>
                 </div>
-                <div class="col-lg-5">
+                <div class="col-lg-7">
                     <div class="col m-0 p-0">
                         <div class="shadow-sm border m-2 p-4 bg-white">
                             <div class="d-flex align-items-center justify-content-between">
@@ -51,7 +53,7 @@
                                 </h1>
 
                             </div>
-                            <ChartRenderer type="'line'" title="'Monthly Stock Report'" labels="state.label_strings"/>
+                            <ChartRenderer type="'line'" title="'Monthly Stock Report'" labels="state.label_strings" stockData="state.data_stock"/>
 
                         </div>
                     </div>

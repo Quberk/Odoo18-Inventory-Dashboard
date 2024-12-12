@@ -5,9 +5,9 @@ from odoo import models, fields, api
 class InheritProductProduct(models.Model):
     _inherit = 'product.product'
     
-    
+    @api.model
     def get_stock_at_time(self, product_id, date_time):
-        self.ensure_one()
+        print("Get Stock at Time")
         StockMove = self.env["stock.move"]
         domain = [
             ("product_id", "=", product_id),

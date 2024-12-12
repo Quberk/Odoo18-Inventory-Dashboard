@@ -24,16 +24,7 @@ export class ChartRenderer extends Component {
           type: this.props.type,
           data: {
             labels: this.props.labels,
-            datasets: [
-              {
-                label: 'My First Dataset',
-                data: [300, 50, 100],
-                hoverOffset: 4
-              },{
-                label: 'My Second Dataset',
-                data: [100, 70, 150],
-                hoverOffset: 4
-              }]
+            datasets: this.props.stockData
           },
           options: {
             responsive: true,
